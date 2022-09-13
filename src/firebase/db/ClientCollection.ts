@@ -29,7 +29,7 @@ export default class ClientCollection implements ClientRepository {
   }
 
   async delete(client: Client): Promise<void> {
-    return this.collection().doc(client.id).delete();
+    return this.collection().doc(client?.id).delete();
   }
 
   async getAll(): Promise<Client[]> {

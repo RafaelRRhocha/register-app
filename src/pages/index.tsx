@@ -36,7 +36,7 @@ const Home: NextPage = () => {
 
   const clientDeleted = async (client: Client) => {
     await repo.delete(client);
-    getAll
+    getAll();
   }
 
   const createClient = () => {
