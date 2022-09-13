@@ -27,7 +27,7 @@ export const AppProvider: FC<AppProviderProps> = ({children}) => {
 
   const data = {
     theme: getTheme,
-    changeTheme,
+    changeTheme
   }
 
   return (

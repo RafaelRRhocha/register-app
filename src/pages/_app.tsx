@@ -7,7 +7,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
-        <title>Next Crud</title>
+        <title>Manager Clients</title>
       </Head>
       <AppProvider>
         <Component {...pageProps} />

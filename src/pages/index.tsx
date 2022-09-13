@@ -1,37 +1,70 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import type { NextPage } from 'next'
+import { useEffect, useState } from 'react';
 import Button from '../components/Button';
+import Forms from '../components/Forms';
 import Layout from '../components/Layout'
 import Table from '../components/Table';
 import Client from '../core/Client';
+import ClientRepository from '../core/ClientRepository';
 import { useAppData } from '../data/hook/useAppData'
+import ClientCollection from '../firebase/db/ClientCollection';
 
 const Home: NextPage = () => {
-  const {theme} = useAppData();
+  const { theme } = useAppData();
 
-  const clientMock = [
-    new Client('Ana', 21, '1'),
-    new Client('bia', 21, '2'),
-    new Client('caarol', 21, '3')
-  ];
+  const repo: ClientRepository = new ClientCollection();
 
-  const clientSelected = (client: Client) => {
-    console.log(client.name)
+
+  const [visible, setVisible] = useState<'table' | 'form'>('table');
+  const [newClient, setNewClient] = useState<Client>(Client.void());
+  const [newClients, setNewClients] = useState<Client[]>([]);
+
+  const getAll = () => {
+    repo.getAll().then(clients => {
+      setNewClients(clients);
+      setVisible('table')
+    });
   }
 
-  const clientDeleted = (client: Client) => {
-    console.log(client.id)
+  useEffect(getAll, []);
+
+  const clientSelected = (client: Client) => {
+    setNewClient(client)
+    setVisible('form')
+  }
+
+  const clientDeleted = async (client: Client) => {
+    await repo.delete(client);
+    getAll
+  }
+
+  const createClient = () => {
+    setNewClient(Client.void())
+    setVisible('form');
+  }
+
+  const saveClient = async (client: Client) => {
+    await repo.save(client);
+    getAll();
   }
 
   return (
     <div className={`${theme} transition-colors`}>
       <div className={`flex justify-center items-center h-screen bg-zinc-300 dark:bg-zinc-700`}>
-        <Layout newTitle='Novo Cadastro'>
-          <Button>New Client</Button>
-          <Table
-            clients={ clientMock }
-            clientSelected={ clientSelected }
-            clientDeleted={ clientDeleted }
-          ></Table>
+        <Layout newTitle='New Register'>
+          {visible === 'table' ? (
+            <>
+              <Button onClick={createClient}>New Client</Button>
+              <Table
+                clients={ newClients }
+                clientSelected={ clientSelected }
+                clientDeleted={ clientDeleted }
+              ></Table>
+            </>
+          ) : (
+            <Forms changeClient={ saveClient } cancelVisible={ setVisible } client={ newClient } />
+          )}
         </Layout>
       </div>
     </div>
