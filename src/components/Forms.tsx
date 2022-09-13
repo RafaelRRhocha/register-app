@@ -23,7 +23,7 @@ const Forms: FC<FormsProps> = ({ client, cancelVisible, changeClient }) => {
       <Inputs text="Age" value={ age } type="number" onChange={ setAge } />
       <div className="flex gap-2 justify-end m-5">
         <Button color={ 'btn-info' } onClick={() => changeClient?.(new Client(name, Number(age), id))}>
-          {id ? 'Alterar' : 'Salvar'}
+          {id ? 'Change' : 'Save'}
         </Button>
         <Button onClick={() => cancelVisible('table') } color={ 'btn-warning' }>
           Cancel
